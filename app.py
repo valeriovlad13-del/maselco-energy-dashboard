@@ -29,21 +29,6 @@ def load_data():
 
 df = load_data()
 
-if "_initial_scroll_done" not in st.session_state:
-    st.session_state["_initial_scroll_done"] = True
-    components.html(
-        """
-        <script>
-            setTimeout(function () {
-                window.parent.scrollTo(0, 0);
-                document.documentElement.scrollTop = 0;
-                document.body.scrollTop = 0;
-            }, 250);
-        </script>
-        """,
-        height=1,
-    )
-
 def icon_svg(kind, color=GREEN, size=24):
     icons = {
         "bolt": '<path d="M13 2 3 14h7l-1 8 12-14h-7l-1-6Z"/>',
