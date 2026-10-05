@@ -66,10 +66,6 @@ st.markdown(
             background: rgba(250, 251, 250, 0.92);
         }}
 
-        [data-testid="stToolbar"] {{
-            visibility: hidden;
-        }}
-
         /* Keep Streamlit controls aligned with the MASELCO palette. */
         [data-baseweb="tag"] {{
             background: #EAF5EE !important;
@@ -92,6 +88,10 @@ st.markdown(
         [data-testid="stSidebar"] {{
             background: #F3F7F4;
             border-right: 1px solid #DCE6DF;
+        }}
+
+        [data-testid="stSidebar"] section {{
+            padding-top: 1rem;
         }}
 
         h1, h2, h3 {{
@@ -232,6 +232,10 @@ st.markdown(
             .dashboard-header {{
                 gap: 9px;
             }}
+
+            [data-testid="stSidebar"] {{
+                min-width: 280px;
+            }}
         }}
 
         @media (max-width: 640px) {{
@@ -284,10 +288,7 @@ st.markdown(
 # -----------------------------
 # Sidebar filters
 # -----------------------------
-st.sidebar.markdown(
-    f'<h3>{icon_svg("chart", GREEN, 20)} Dashboard Filters</h3>',
-    unsafe_allow_html=True,
-)
+st.sidebar.markdown("### Dashboard Filters")
 
 years = sorted(df["year"].unique())
 year_range = st.sidebar.slider(
@@ -311,19 +312,11 @@ filtered = df[
 
 st.sidebar.caption("Use the filters to inspect actual and forecast records.")
 
-st.sidebar.markdown(
-    f"""
-    <div style="background:#EAF5EE;border:1px solid #DCE6DF;border-radius:10px;padding:12px;margin-top:16px;">
-        {icon_svg("info", GREEN, 18)}
-        <strong style="color:{DARK};">Data source</strong><br>
-        <span style="color:{MUTED};font-size:0.76rem;">
-        DOE 2023–2032 Distribution Development Plan (MASELCO section).
-        Actual and forecast values are explicitly separated.
-        </span>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+with st.sidebar.expander("Data source", expanded=False):
+    st.caption(
+        "DOE 2023–2032 Distribution Development Plan (MASELCO section). "
+        "Actual and forecast values are explicitly separated."
+    )
 
 # -----------------------------
 # Fixed 2022 overview
