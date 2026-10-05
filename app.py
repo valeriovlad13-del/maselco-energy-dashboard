@@ -704,11 +704,11 @@ st.markdown(
     <div class="dashboard-footer">
         <div class="footer-name">MASELCO Energy Data Analysis Dashboard</div>
         <div class="footer-role">
-            Developed by <strong style="color:{DARK};">Blademir P. Rubia</strong>
+            Developed by <strong style="color:{DARK};">Engr. Blademir P. Rubia</strong>
             <span class="footer-dot">|</span>
             Electrical Engineer
             <span class="footer-dot">|</span>
-            Computer Science Student
+            Computer Science
             <span class="footer-dot">|</span>
             Data Analyst
         </div>
