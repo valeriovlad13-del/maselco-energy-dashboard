@@ -81,6 +81,19 @@ st.markdown(
         }}
 
         @media (max-width: 640px) {{
+            [data-testid="stHorizontalBlock"] {{
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+            }}
+
+            [data-testid="stHorizontalBlock"] > [data-testid="column"] {{
+                width: 100% !important;
+                flex: 1 1 100% !important;
+            }}
+
+            .modebar {{
+                display: none !important;
+            }}
             [data-testid="stAppViewContainer"] .main .block-container {{
                 padding-top: 0 !important;
                 padding-bottom: 0.5rem !important;
@@ -483,18 +496,29 @@ with right:
         paper_bgcolor="white",
         font_color=DARK,
         margin=dict(l=10, r=10, t=55, b=10),
-        yaxis=dict(gridcolor=GRID),
+        yaxis=dict(gridcolor=GRID, rangemode="tozero"),
     )
     st.plotly_chart(fig, use_container_width=True)
 
+sector_table = sector_summary.rename(
+    columns={
+        "sector": "Sector",
+        "customers": "Customers",
+        "sales_mwh": "Energy Sales (MWh)",
+        "customer_share_pct": "Customer Share",
+        "sales_share_pct": "Sales Share",
+        "mwh_per_customer": "MWh per Customer",
+    }
+)
+
 st.dataframe(
-    sector_summary.style.format(
+    sector_table.style.format(
         {
-            "customers": "{:,.0f}",
-            "sales_mwh": "{:,.0f}",
-            "customer_share_pct": "{:.1f}%",
-            "sales_share_pct": "{:.1f}%",
-            "mwh_per_customer": "{:.2f}",
+            "Customers": "{:,.0f}",
+            "Energy Sales (MWh)": "{:,.0f}",
+            "Customer Share": "{:.1f}%",
+            "Sales Share": "{:.1f}%",
+            "MWh per Customer": "{:.2f}",
         }
     ),
     use_container_width=True,
@@ -587,6 +611,16 @@ if not demand.empty:
         yaxis=dict(gridcolor=GRID),
         legend=dict(orientation="h", y=1.08, x=0),
     )
+    if (not demand.empty) and ("Forecast" in demand["data_status"].values) and ("Actual" in demand["data_status"].values):
+        forecast_start = int(demand.loc[demand["data_status"] == "Forecast", "year"].min())
+        fig.add_vline(
+            x=forecast_start - 0.5,
+            line_dash="dot",
+            line_color="#AAB7B0",
+            annotation_text="Forecast begins",
+            annotation_position="top right",
+            annotation_font_color=MUTED,
+        )
     st.plotly_chart(fig, use_container_width=True)
 
     # Dynamic summary: always use the first and last visible demand records.
@@ -637,11 +671,30 @@ st.markdown(
 # -----------------------------
 st.subheader("Source Data")
 st.markdown(
-    '<div class="section-note">Use the filters above to inspect the records used by the dashboard.</div>',
+    '<div class="section-note">Use the filters above to inspect the records used by the dashboard. Source URLs are retained in the dataset but omitted here for readability.</div>',
     unsafe_allow_html=True,
 )
 
-st.dataframe(filtered, use_container_width=True, hide_index=True)
+source_display = filtered[
+    ["dataset", "year", "sector", "metric", "value", "unit", "data_status", "source"]
+].rename(
+    columns={
+        "dataset": "Dataset",
+        "year": "Year",
+        "sector": "Sector",
+        "metric": "Metric",
+        "value": "Value",
+        "unit": "Unit",
+        "data_status": "Status",
+        "source": "Source Document",
+    }
+)
+
+st.dataframe(
+    source_display,
+    use_container_width=True,
+    hide_index=True,
+)
 
 # -----------------------------
 # Footer
