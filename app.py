@@ -100,10 +100,19 @@ st.markdown(
         }}
 
         .dashboard-header {{
+            position: sticky;
+            top: 0;
+            z-index: 1000;
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 4px;
+            min-height: 64px;
+            margin: -1rem -1rem 0;
+            padding: 10px 1rem;
+            background: rgba(250, 251, 250, 0.96);
+            border-bottom: 1px solid #E1E8E3;
+            box-shadow: 0 2px 10px rgba(23, 53, 42, 0.05);
+            backdrop-filter: blur(8px);
         }}
 
         .header-icon {{
@@ -124,9 +133,31 @@ st.markdown(
 
         .dashboard-title {{
             color: {DARK};
-            font-size: clamp(1.45rem, 3vw, 2.15rem);
+            font-size: clamp(1.3rem, 2.8vw, 2rem);
             font-weight: 700;
             line-height: 1.15;
+        }}
+
+        .header-map {{
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 0 0 auto;
+        }}
+
+        .header-map img {{
+            width: 38px;
+            height: 48px;
+            object-fit: contain;
+            opacity: 0.88;
+        }}
+
+        .header-map-label {{
+            color: {MUTED};
+            font-size: 0.72rem;
+            line-height: 1.2;
+            text-align: left;
         }}
 
         .dashboard-subtitle {{
@@ -231,6 +262,20 @@ st.markdown(
 
             .dashboard-header {{
                 gap: 9px;
+                min-height: 58px;
+                margin-left: -0.5rem;
+                margin-right: -0.5rem;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }}
+
+            .header-map-label {{
+                display: none;
+            }}
+
+            .header-map img {{
+                width: 30px;
+                height: 38px;
             }}
 
             [data-testid="stSidebar"] {{
@@ -240,7 +285,13 @@ st.markdown(
 
         @media (max-width: 640px) {{
             .dashboard-title {{
-                font-size: 1.35rem;
+                font-size: 1.15rem;
+            }}
+
+            .dashboard-header {{
+                min-height: 54px;
+                padding-top: 7px;
+                padding-bottom: 7px;
             }}
 
             .dashboard-subtitle {{
@@ -276,6 +327,10 @@ st.markdown(
     <div class="dashboard-header">
         <div class="header-icon">{icon_svg("bolt", YELLOW, 26)}</div>
         <div class="dashboard-title">MASELCO Energy Data Analysis Dashboard</div>
+        <div class="header-map" title="Masbate, Philippines">
+            <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Masbate_in_Philippines.svg" alt="Map of Masbate, Philippines">
+            <div class="header-map-label">MASBATE<br>PHILIPPINES</div>
+        </div>
     </div>
     <div class="dashboard-subtitle">
         Analysis of MASELCO's customer distribution, energy sales, and peak demand
@@ -584,7 +639,8 @@ st.markdown(
         <div class="source-note" style="margin-top:7px;">
             Source: Department of Energy (DOE), 2023–2032 Distribution Development Plan
             and DOE-published MASELCO supply-demand data. Derived calculations are
-            analysis results rather than source measurements.
+            analysis results rather than source measurements.<br>
+            Map: Milenioscuro, <a href="https://commons.wikimedia.org/wiki/File:Masbate_in_Philippines.svg" target="_blank" rel="noopener noreferrer">Wikimedia Commons, CC BY-SA 4.0</a>.
         </div>
     </div>
     """,
