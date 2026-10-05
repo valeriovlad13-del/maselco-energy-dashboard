@@ -159,22 +159,6 @@ st.markdown(
             margin-bottom: 0.8rem;
         }}
 
-        .dashboard-jump {{
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            margin: 0.15rem 0 0.5rem;
-            color: {GREEN};
-            font-size: 0.82rem;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-        }}
-
-        .dashboard-jump:hover {{
-            color: {DARK};
-        }}
-
         .print-control {{
             display: flex;
             justify-content: flex-end;
@@ -376,37 +360,12 @@ st.markdown(
 )
 
 # -----------------------------
-# Sidebar filters
+# Dashboard filters
 # -----------------------------
-st.sidebar.markdown("### Dashboard Filters")
-
 years = sorted(df["year"].unique())
-year_range = st.sidebar.slider(
-    "Year range",
-    min_value=int(min(years)),
-    max_value=int(max(years)),
-    value=(int(min(years)), int(max(years))),
-)
-
 statuses = sorted(df["data_status"].unique())
-selected_status = st.sidebar.multiselect(
-    "Data status",
-    statuses,
-    default=statuses,
-)
 
-filtered = df[
-    df["year"].between(year_range[0], year_range[1])
-    & df["data_status"].isin(selected_status)
-].copy()
-
-st.sidebar.caption("Use the filters to inspect actual and forecast records.")
-
-with st.sidebar.expander("Data source", expanded=False):
-    st.caption(
-        "DOE 2023–2032 Distribution Development Plan (MASELCO section). "
-        "Actual and forecast values are explicitly separated."
-    )
+filtered = df.copy()
 
 # -----------------------------
 # Fixed 2022 overview
@@ -561,11 +520,33 @@ for kind, color, finding in findings:
         unsafe_allow_html=True,
     )
 
+st.markdown("### Dashboard Filters")
+filter_col1, filter_col2 = st.columns(2)
+
+with filter_col1:
+    year_range = st.slider(
+        "Year range",
+        min_value=int(min(years)),
+        max_value=int(max(years)),
+        value=(int(min(years)), int(max(years))),
+    )
+
+with filter_col2:
+    selected_status = st.multiselect(
+        "Data status",
+        statuses,
+        default=statuses,
+    )
+
+filtered = df[
+    df["year"].between(year_range[0], year_range[1])
+    & df["data_status"].isin(selected_status)
+].copy()
+
 st.markdown(
-    '<a class="dashboard-jump" href="#peak-demand-section">» Dashboard Filters</a>',
+    '<div class="section-note">Use these filters to control the peak-demand chart and source-data table.</div>',
     unsafe_allow_html=True,
 )
-st.markdown('<div id="peak-demand-section"></div>', unsafe_allow_html=True)
 
 # -----------------------------
 # Peak Demand
