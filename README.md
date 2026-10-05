@@ -130,8 +130,8 @@ streamlit run app.py
 
 ## Author
 
-**Blademir P. Rubia**
+**Engr. Blademir Rubia**
 
-Electrical Engineer | Computer Science Student | Data Analyst
+Electrical Engineer | Computer Science | Data Analyst
 
 [GitHub](https://github.com/valeriovlad13-del)
