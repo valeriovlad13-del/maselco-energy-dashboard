@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import streamlit.components.v1 as components
 from pathlib import Path
 
 st.set_page_config(
@@ -28,6 +29,16 @@ def load_data():
 
 
 df = load_data()
+
+# Start the dashboard at the top when the page is opened.
+components.html(
+    """
+    <script>
+        window.parent.scrollTo({top: 0, left: 0, behavior: "auto"});
+    </script>
+    """,
+    height=0,
+)
 
 
 def icon_svg(kind, color=GREEN, size=24):
@@ -159,36 +170,9 @@ st.markdown(
             margin-bottom: 0.8rem;
         }}
 
-        .print-control {{
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 1.25rem;
-            padding-top: 1rem;
-            border-top: 1px solid #DCE6DF;
-        }}
-
-        .print-control a {{
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 7px 11px;
-            border: 1px solid #CDE2D4;
-            border-radius: 8px;
-            background: #F3F7F4;
-            color: {GREEN};
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-decoration: none;
-        }}
-
-        .print-control a:hover {{
-            background: #EAF5EE;
-        }}
-
         @media print {{
             [data-testid="stSidebar"],
-            [data-testid="stHeader"],
-            .print-control {{
+            [data-testid="stHeader"] {{
                 display: none !important;
             }}
         }}
@@ -521,7 +505,7 @@ for kind, color, finding in findings:
     )
 
 st.markdown("### Dashboard Filters")
-filter_col1, filter_col2 = st.columns(2)
+filter_col1, filter_col2, filter_col3 = st.columns([1.25, 1.25, 0.55])
 
 with filter_col1:
     year_range = st.slider(
@@ -536,6 +520,17 @@ with filter_col2:
         "Data status",
         statuses,
         default=statuses,
+    )
+
+with filter_col3:
+    st.markdown(
+        '<div style="margin-top:1.72rem;">'
+        '<a href="#" onclick="window.print(); return false;" '
+        'style="display:inline-flex;align-items:center;justify-content:center;'
+        'width:100%;padding:8px 10px;border:1px solid #CDE2D4;border-radius:8px;'
+        'background:#F3F7F4;color:#0B6B3A;font-size:0.82rem;font-weight:600;'
+        'text-decoration:none;">Print</a></div>',
+        unsafe_allow_html=True,
     )
 
 filtered = df[
@@ -670,13 +665,3 @@ st.markdown(
 )
 
 
-st.markdown(
-    '''
-    <div class="print-control">
-        <a href="#" onclick="window.print(); return false;" aria-label="Print dashboard">
-            Print Dashboard
-        </a>
-    </div>
-    ''',
-    unsafe_allow_html=True,
-)
