@@ -8,6 +8,20 @@ An interactive data-analysis dashboard for the **Masbate Electric Cooperative (M
 
 The dashboard presents utility-level analysis of MASELCO's customer distribution, electricity sales, and peak-demand planning data.
 
+## Dashboard Preview
+
+### Overview
+
+![MASELCO Energy Data Analysis Dashboard overview](screenshots/dashboard-overview.jpg)
+
+### Peak Demand Analysis
+
+![MASELCO peak demand actual versus forecast analysis](screenshots/peak-demand-analysis.jpg)
+
+### Source Data
+
+![MASELCO dashboard source data](screenshots/source-data.jpg)
+
 ## Overview
 
 The dashboard analyzes:
@@ -71,6 +85,9 @@ maselco-energy-dashboard/
 ├── .streamlit/
 │   └── config.toml
 └── screenshots/
+    ├── dashboard-overview.jpg
+    ├── peak-demand-analysis.jpg
+    └── source-data.jpg
 ```
 
 ## Run Locally
