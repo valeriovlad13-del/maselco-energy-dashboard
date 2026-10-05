@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import streamlit.components.v1 as components
 from pathlib import Path
 
 st.set_page_config(
@@ -28,6 +29,21 @@ def load_data():
 
 
 df = load_data()
+
+if "_initial_scroll_done" not in st.session_state:
+    st.session_state["_initial_scroll_done"] = True
+    components.html(
+        """
+        <script>
+            setTimeout(function () {
+                window.parent.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }, 250);
+        </script>
+        """,
+        height=1,
+    )
 
 def icon_svg(kind, color=GREEN, size=24):
     icons = {
@@ -61,33 +77,25 @@ st.markdown(
             background: #FAFBFA;
         }}
 
+        /* The one-time scroll helper must occupy no visible space. */
+        [data-testid="stElementContainer"]:has(iframe[title*="streamlit.components"]) {{
+            height: 0 !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }}
+
+        [data-testid="stElementContainer"]:has(iframe[title*="streamlit.components"]) iframe {{
+            height: 1px !important;
+            min-height: 1px !important;
+            display: block !important;
+        }}
+
         /* Reduce Streamlit's default top/bottom page padding so the dashboard fills the viewport cleanly. */
         [data-testid="stAppViewContainer"] .main .block-container {{
             padding-top: 0.75rem !important;
             padding-bottom: 0.75rem !important;
-        }}
-
-        /* Keep the browser print action reliable and responsive. */
-        .print-button {{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 38px;
-            box-sizing: border-box;
-            border: 1px solid #CDE2D4;
-            border-radius: 8px;
-            background: #F3F7F4;
-            color: {GREEN};
-            font-size: 0.82rem;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-        }}
-
-        .print-button:hover {{
-            background: #EAF5EE;
-            color: {DARK};
         }}
 
 
@@ -106,11 +114,6 @@ st.markdown(
             [data-testid="stAppViewContainer"] .main .block-container {{
                 padding-top: 0.5rem !important;
                 padding-bottom: 0.5rem !important;
-            }}
-
-            .print-button {{
-                min-height: 42px;
-                font-size: 0.8rem;
             }}
         }}
 
@@ -546,7 +549,7 @@ for kind, color, finding in findings:
     )
 
 st.markdown("### Dashboard Filters")
-filter_col1, filter_col2, filter_col3 = st.columns([1.25, 1.25, 0.55])
+filter_col1, filter_col2 = st.columns(2)
 
 with filter_col1:
     year_range = st.slider(
@@ -561,15 +564,6 @@ with filter_col2:
         "Data status",
         statuses,
         default=statuses,
-    )
-
-with filter_col3:
-    st.markdown(
-        '<div style="margin-top:1.72rem;">'
-        '<a class="print-button" href="javascript:void(0);" '
-        'onclick="window.parent.print(); return false;" '
-        'role="button" aria-label="Print dashboard">Print</a></div>',
-        unsafe_allow_html=True,
     )
 
 filtered = df[
