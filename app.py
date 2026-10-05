@@ -62,59 +62,15 @@ st.markdown(
             background: #FAFBFA;
         }}
 
-        /* Keep Streamlit's native control area functional, but remove its visual surface. */
+        /* Keep Streamlit's native header controls functional without creating a large visual strip. */
         [data-testid="stHeader"] {{
             background: transparent !important;
             border: 0 !important;
             box-shadow: none !important;
-            height: 2.875rem !important;
-            min-height: 2.875rem !important;
         }}
 
         [data-testid="stDecoration"] {{
             display: none !important;
-        }}
-
-        [data-testid="stToolbar"] {{
-            position: fixed !important;
-            top: 8px !important;
-            right: 10px !important;
-            z-index: 1100 !important;
-        }}
-
-        [data-testid="collapsedControl"] {{
-            position: fixed !important;
-            top: 8px !important;
-            left: 10px !important;
-            z-index: 1100 !important;
-        }}
-
-        /* Keep Streamlit controls aligned with the MASELCO palette. */
-        [data-baseweb="tag"] {{
-            background: #EAF5EE !important;
-            color: {GREEN} !important;
-            border: 1px solid #CDE2D4 !important;
-        }}
-
-        [data-testid="stAlert"] {{
-            background: #F1F8F3;
-            border: 1px solid #CDE2D4;
-            color: {DARK};
-        }}
-
-        [data-testid="stDataFrame"] {{
-            border: 1px solid #E1E8E3;
-            border-radius: 10px;
-            overflow: hidden;
-        }}
-
-        [data-testid="stSidebar"] {{
-            background: #F3F7F4;
-            border-right: 1px solid #DCE6DF;
-        }}
-
-        [data-testid="stSidebar"] section {{
-            padding-top: 1rem;
         }}
 
         h1, h2, h3 {{
