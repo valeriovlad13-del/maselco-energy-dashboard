@@ -73,6 +73,12 @@ st.markdown(
             display: none !important;
         }}
 
+        /* Native Streamlit navigation controls are replaced by in-page controls. */
+        [data-testid="collapsedControl"],
+        [data-testid="stToolbar"] {{
+            display: none !important;
+        }}
+
         h1, h2, h3 {{
             color: {DARK};
             letter-spacing: -0.02em;
@@ -151,6 +157,56 @@ st.markdown(
             font-size: 0.86rem;
             margin-top: -0.45rem;
             margin-bottom: 0.8rem;
+        }}
+
+        .dashboard-jump {{
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin: 0.15rem 0 0.5rem;
+            color: {GREEN};
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }}
+
+        .dashboard-jump:hover {{
+            color: {DARK};
+        }}
+
+        .print-control {{
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #DCE6DF;
+        }}
+
+        .print-control a {{
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 11px;
+            border: 1px solid #CDE2D4;
+            border-radius: 8px;
+            background: #F3F7F4;
+            color: {GREEN};
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+        }}
+
+        .print-control a:hover {{
+            background: #EAF5EE;
+        }}
+
+        @media print {{
+            [data-testid="stSidebar"],
+            [data-testid="stHeader"],
+            .print-control {{
+                display: none !important;
+            }}
         }}
 
         div[data-testid="stMetric"] {{
@@ -505,6 +561,12 @@ for kind, color, finding in findings:
         unsafe_allow_html=True,
     )
 
+st.markdown(
+    '<a class="dashboard-jump" href="#peak-demand-section">» Dashboard Filters</a>',
+    unsafe_allow_html=True,
+)
+st.markdown('<div id="peak-demand-section"></div>', unsafe_allow_html=True)
+
 # -----------------------------
 # Peak Demand
 # -----------------------------
@@ -623,5 +685,17 @@ st.markdown(
         </div>
     </div>
     """,
+    unsafe_allow_html=True,
+)
+
+
+st.markdown(
+    '''
+    <div class="print-control">
+        <a href="#" onclick="window.print(); return false;" aria-label="Print dashboard">
+            Print Dashboard
+        </a>
+    </div>
+    ''',
     unsafe_allow_html=True,
 )
