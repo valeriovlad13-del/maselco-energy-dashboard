@@ -1,7 +1,6 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import streamlit.components.v1 as components
 from pathlib import Path
 
 st.set_page_config(
@@ -29,17 +28,6 @@ def load_data():
 
 
 df = load_data()
-
-# Start the dashboard at the top when the page is opened.
-components.html(
-    """
-    <script>
-        window.parent.scrollTo({top: 0, left: 0, behavior: "auto"});
-    </script>
-    """,
-    height=0,
-)
-
 
 def icon_svg(kind, color=GREEN, size=24):
     icons = {
@@ -71,6 +59,59 @@ st.markdown(
 
         [data-testid="stAppViewContainer"] {{
             background: #FAFBFA;
+        }}
+
+        /* Reduce Streamlit's default top/bottom page padding so the dashboard fills the viewport cleanly. */
+        [data-testid="stAppViewContainer"] .main .block-container {{
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+        }}
+
+        /* Keep the browser print action reliable and responsive. */
+        .print-button {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 38px;
+            box-sizing: border-box;
+            border: 1px solid #CDE2D4;
+            border-radius: 8px;
+            background: #F3F7F4;
+            color: {GREEN};
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }}
+
+        .print-button:hover {{
+            background: #EAF5EE;
+            color: {DARK};
+        }}
+
+
+
+        @media (max-width: 480px) {{
+            .dashboard-title {{
+                font-size: 1.05rem;
+            }}
+
+            .header-map {{
+                display: none;
+            }}
+        }}
+
+        @media (max-width: 640px) {{
+            [data-testid="stAppViewContainer"] .main .block-container {{
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+            }}
+
+            .print-button {{
+                min-height: 42px;
+                font-size: 0.8rem;
+            }}
         }}
 
         /* Keep Streamlit's native header controls functional without creating a large visual strip. */
@@ -525,11 +566,9 @@ with filter_col2:
 with filter_col3:
     st.markdown(
         '<div style="margin-top:1.72rem;">'
-        '<a href="#" onclick="window.print(); return false;" '
-        'style="display:inline-flex;align-items:center;justify-content:center;'
-        'width:100%;padding:8px 10px;border:1px solid #CDE2D4;border-radius:8px;'
-        'background:#F3F7F4;color:#0B6B3A;font-size:0.82rem;font-weight:600;'
-        'text-decoration:none;">Print</a></div>',
+        '<a class="print-button" href="javascript:void(0);" '
+        'onclick="window.parent.print(); return false;" '
+        'role="button" aria-label="Print dashboard">Print</a></div>',
         unsafe_allow_html=True,
     )
 
@@ -631,7 +670,7 @@ st.markdown(
 # -----------------------------
 st.subheader("Source Data")
 st.markdown(
-    '<div class="section-note">Use the filters in the sidebar to inspect the records used by the dashboard.</div>',
+    '<div class="section-note">Use the filters above to inspect the records used by the dashboard.</div>',
     unsafe_allow_html=True,
 )
 
