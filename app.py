@@ -62,8 +62,32 @@ st.markdown(
             background: #FAFBFA;
         }}
 
+        /* Remove Streamlit's large header surface while keeping its controls. */
         [data-testid="stHeader"] {{
-            background: rgba(250, 251, 250, 0.92);
+            background: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            height: 0 !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+        }}
+
+        [data-testid="stDecoration"] {{
+            display: none !important;
+        }}
+
+        [data-testid="stToolbar"] {{
+            position: fixed !important;
+            top: 8px !important;
+            right: 10px !important;
+            z-index: 1100 !important;
+        }}
+
+        [data-testid="collapsedControl"] {{
+            position: fixed !important;
+            top: 8px !important;
+            left: 10px !important;
+            z-index: 1100 !important;
         }}
 
         /* Keep Streamlit controls aligned with the MASELCO palette. */
