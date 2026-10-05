@@ -65,7 +65,7 @@ st.markdown(
         [data-testid="stAppViewContainer"] .main .block-container {{
             padding-top: 0 !important;
             padding-bottom: 0.75rem !important;
-            margin-top: -3.25rem !important;
+            margin-top: 0 !important;
         }}
 
 
@@ -84,7 +84,7 @@ st.markdown(
             [data-testid="stAppViewContainer"] .main .block-container {{
                 padding-top: 0 !important;
                 padding-bottom: 0.5rem !important;
-                margin-top: -3.25rem !important;
+                margin-top: 0 !important;
             }}
         }}
 
@@ -93,6 +93,8 @@ st.markdown(
             background: transparent !important;
             border: 0 !important;
             box-shadow: none !important;
+            height: 0 !important;
+            min-height: 0 !important;
         }}
 
         [data-testid="stDecoration"] {{
