@@ -5,20 +5,19 @@ from pathlib import Path
 
 st.set_page_config(
     page_title="MASELCO Energy Data Analysis Dashboard",
-    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# MASELCO-inspired palette: green + yellow, with neutral backgrounds.
+# MASELCO-inspired palette: green + yellow with clean neutral surfaces.
 GREEN = "#0B6B3A"
 GREEN_LIGHT = "#2E8B57"
 YELLOW = "#F2C94C"
 DARK = "#17352A"
 MUTED = "#667085"
 GRID = "#E6EAE8"
-FORECAST = "#2E8B57"
-ACTUAL = "#F2C94C"
+ACTUAL = "#0B6B3A"
+FORECAST = "#F2B705"
 
 DATA_PATH = Path(__file__).parent / "data" / "maselco_energy_data.csv"
 
@@ -30,7 +29,27 @@ def load_data():
 
 df = load_data()
 
-# Minimal, clean styling using the main MASELCO-inspired colors.
+
+def icon_svg(kind, color=GREEN, size=24):
+    icons = {
+        "bolt": '<path d="M13 2 3 14h7l-1 8 12-14h-7l-1-6Z"/>',
+        "users": '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+        "chart": '<path d="M4 19V9m6 10V5m6 14v-7m6 7V3"/>',
+        "trend": '<path d="m3 17 6-6 4 4 8-9"/><path d="M17 6h4v4"/>',
+        "table": '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16M15 10v10"/>',
+        "info": '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+    }
+    path = icons.get(kind, icons["info"])
+    return (
+        f'<svg class="svg-icon" width="{size}" height="{size}" viewBox="0 0 24 24" '
+        f'fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+        f'aria-hidden="true">{path}</svg>'
+    )
+
+
+# -----------------------------
+# Responsive, minimal styling
+# -----------------------------
 st.markdown(
     f"""
     <style>
@@ -43,21 +62,46 @@ st.markdown(
             border-right: 1px solid #DCE6DF;
         }}
 
-        [data-testid="stSidebar"] h2,
-        [data-testid="stSidebar"] h3 {{
-            color: {GREEN};
-        }}
-
         h1, h2, h3 {{
             color: {DARK};
             letter-spacing: -0.02em;
         }}
 
+        .dashboard-header {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }}
+
+        .header-icon {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border-radius: 10px;
+            background: #EAF5EE;
+        }}
+
+        .header-icon svg {{
+            width: 25px;
+            height: 25px;
+        }}
+
+        .dashboard-title {{
+            color: {DARK};
+            font-size: clamp(1.45rem, 3vw, 2.15rem);
+            font-weight: 700;
+            line-height: 1.15;
+        }}
+
         .dashboard-subtitle {{
             color: {MUTED};
-            font-size: 0.92rem;
-            margin-top: -0.55rem;
-            margin-bottom: 1.3rem;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            margin: 3px 0 1.25rem 54px;
         }}
 
         .section-note {{
@@ -71,26 +115,38 @@ st.markdown(
             background: white;
             border: 1px solid #E1E8E3;
             border-radius: 12px;
-            padding: 16px 18px;
+            padding: 14px 15px;
+            min-height: 104px;
             box-shadow: 0 1px 2px rgba(23, 53, 42, 0.04);
         }}
 
         div[data-testid="stMetricLabel"] {{
             color: {MUTED};
+            font-size: 0.78rem;
         }}
 
         div[data-testid="stMetricValue"] {{
             color: {DARK};
+            font-size: clamp(1.25rem, 2.3vw, 1.75rem);
         }}
 
         .finding-card {{
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
             background: white;
             border: 1px solid #E1E8E3;
             border-left: 4px solid {GREEN};
             border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
+            padding: 12px 14px;
+            margin-bottom: 9px;
             line-height: 1.45;
+            font-size: 0.9rem;
+        }}
+
+        .finding-icon {{
+            flex: 0 0 24px;
+            margin-top: 1px;
         }}
 
         .finding-card strong {{
@@ -100,25 +156,106 @@ st.markdown(
         .source-note {{
             color: {MUTED};
             font-size: 0.78rem;
+            line-height: 1.45;
+        }}
+
+        .dashboard-footer {{
+            border-top: 1px solid #DCE6DF;
+            margin-top: 2rem;
+            padding: 16px 0 8px;
+            color: {MUTED};
+            font-size: 0.76rem;
+        }}
+
+        .footer-name {{
+            color: {DARK};
+            font-weight: 700;
+            font-size: 0.9rem;
+        }}
+
+        .footer-role {{
+            margin-top: 3px;
+        }}
+
+        .footer-dot {{
+            color: {YELLOW};
+            padding: 0 5px;
+        }}
+
+        .svg-icon {{
+            vertical-align: middle;
+        }}
+
+        @media (max-width: 900px) {{
+            .dashboard-subtitle {{
+                margin-left: 0;
+            }}
+
+            .header-icon {{
+                width: 36px;
+                height: 36px;
+                flex-basis: 36px;
+            }}
+
+            .dashboard-header {{
+                gap: 9px;
+            }}
+        }}
+
+        @media (max-width: 640px) {{
+            .dashboard-title {{
+                font-size: 1.35rem;
+            }}
+
+            .dashboard-subtitle {{
+                font-size: 0.82rem;
+                margin-top: 5px;
+                margin-bottom: 1rem;
+            }}
+
+            div[data-testid="stMetric"] {{
+                min-height: auto;
+                padding: 12px 13px;
+            }}
+
+            .finding-card {{
+                font-size: 0.82rem;
+                padding: 10px 11px;
+            }}
+
+            .dashboard-footer {{
+                font-size: 0.72rem;
+            }}
         }}
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-st.title("⚡ MASELCO Energy Data Analysis Dashboard")
+# -----------------------------
+# Header
+# -----------------------------
 st.markdown(
-    '<div class="dashboard-subtitle">'
-    "DOE-published data for the Masbate Electric Cooperative (MASELCO). "
-    "Actual and forecast values are explicitly separated."
-    "</div>",
+    f"""
+    <div class="dashboard-header">
+        <div class="header-icon">{icon_svg("bolt", YELLOW, 26)}</div>
+        <div class="dashboard-title">MASELCO Energy Data Analysis Dashboard</div>
+    </div>
+    <div class="dashboard-subtitle">
+        Analysis of MASELCO's customer distribution, energy sales, and peak demand
+        using DOE-published data.
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
 # -----------------------------
 # Sidebar filters
 # -----------------------------
-st.sidebar.header("Dashboard Filters")
+st.sidebar.markdown(
+    f'<h3>{icon_svg("chart", GREEN, 20)} Dashboard Filters</h3>',
+    unsafe_allow_html=True,
+)
 
 years = sorted(df["year"].unique())
 year_range = st.sidebar.slider(
@@ -140,7 +277,21 @@ filtered = df[
     & df["data_status"].isin(selected_status)
 ].copy()
 
-st.sidebar.caption("Tip: use the status filter to compare actual and forecast records.")
+st.sidebar.caption("Use the filters to inspect actual and forecast records.")
+
+st.sidebar.markdown(
+    f"""
+    <div style="background:#EAF5EE;border:1px solid #DCE6DF;border-radius:10px;padding:12px;margin-top:16px;">
+        {icon_svg("info", GREEN, 18)}
+        <strong style="color:{DARK};">Data source</strong><br>
+        <span style="color:{MUTED};font-size:0.76rem;">
+        DOE 2023–2032 Distribution Development Plan (MASELCO section).
+        Actual and forecast values are explicitly separated.
+        </span>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # -----------------------------
 # Fixed 2022 overview
@@ -184,6 +335,7 @@ growth_pct = (
     else None
 )
 
+# Streamlit automatically stacks these columns on narrower screens.
 c1, c2, c3, c4, c5 = st.columns(5)
 c1.metric("2022 Captive Customers", f"{total_customers:,.0f}")
 c2.metric("2022 Energy Sales", f"{total_sales:,.0f} MWh")
@@ -283,13 +435,16 @@ residential = sector_summary[sector_summary["sector"] == "Residential"].iloc[0]
 industrial = sector_summary[sector_summary["sector"] == "Industrial"].iloc[0]
 
 findings = [
-    f"<strong>Customer concentration:</strong> Residential customers represent {residential['customer_share_pct']:.1f}% of MASELCO's 2022 captive customers.",
-    f"<strong>Energy-sales concentration:</strong> Residential customers account for {residential['sales_share_pct']:.1f}% of 2022 energy sales.",
-    f"<strong>Customer intensity:</strong> Industrial customers average {industrial['mwh_per_customer']:.2f} MWh per customer, compared with {residential['mwh_per_customer']:.2f} MWh for residential customers.",
+    ("users", GREEN, f"<strong>Customer concentration:</strong> Residential customers represent {residential['customer_share_pct']:.1f}% of MASELCO's 2022 captive customers."),
+    ("chart", GREEN, f"<strong>Energy-sales concentration:</strong> Residential customers account for {residential['sales_share_pct']:.1f}% of 2022 energy sales."),
+    ("bolt", YELLOW, f"<strong>Customer intensity:</strong> Industrial customers average {industrial['mwh_per_customer']:.2f} MWh per customer, compared with {residential['mwh_per_customer']:.2f} MWh for residential customers."),
 ]
 
-for finding in findings:
-    st.markdown(f'<div class="finding-card">{finding}</div>', unsafe_allow_html=True)
+for kind, color, finding in findings:
+    st.markdown(
+        f'<div class="finding-card"><div class="finding-icon">{icon_svg(kind, color, 22)}</div><div>{finding}</div></div>',
+        unsafe_allow_html=True,
+    )
 
 # -----------------------------
 # Peak Demand
@@ -350,11 +505,28 @@ st.markdown(
 
 st.dataframe(filtered, use_container_width=True, hide_index=True)
 
+# -----------------------------
+# Footer
+# -----------------------------
 st.markdown(
-    '<div class="source-note">'
-    "Source: Department of Energy (DOE), 2023–2032 Distribution Development Plan "
-    "and DOE-published MASELCO supply-demand data. Derived calculations are "
-    "analysis results rather than source measurements."
-    "</div>",
+    f"""
+    <div class="dashboard-footer">
+        <div class="footer-name">MASELCO Energy Data Analysis Dashboard</div>
+        <div class="footer-role">
+            Developed by <strong style="color:{DARK};">Blademir P. Rubia</strong>
+            <span class="footer-dot">|</span>
+            Electrical Engineer
+            <span class="footer-dot">|</span>
+            Computer Science Student
+            <span class="footer-dot">|</span>
+            Data Analyst
+        </div>
+        <div class="source-note" style="margin-top:7px;">
+            Source: Department of Energy (DOE), 2023–2032 Distribution Development Plan
+            and DOE-published MASELCO supply-demand data. Derived calculations are
+            analysis results rather than source measurements.
+        </div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
