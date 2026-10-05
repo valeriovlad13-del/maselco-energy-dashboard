@@ -1,7 +1,6 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import streamlit.components.v1 as components
 from pathlib import Path
 
 st.set_page_config(
@@ -77,25 +76,11 @@ st.markdown(
             background: #FAFBFA;
         }}
 
-        /* The one-time scroll helper must occupy no visible space. */
-        [data-testid="stElementContainer"]:has(iframe[title*="streamlit.components"]) {{
-            height: 0 !important;
-            min-height: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-        }}
-
-        [data-testid="stElementContainer"]:has(iframe[title*="streamlit.components"]) iframe {{
-            height: 1px !important;
-            min-height: 1px !important;
-            display: block !important;
-        }}
-
-        /* Reduce Streamlit's default top/bottom page padding so the dashboard fills the viewport cleanly. */
+        /* Pull the dashboard content to the top of the viewport while preserving Streamlit's native header behavior. */
         [data-testid="stAppViewContainer"] .main .block-container {{
-            padding-top: 0.75rem !important;
+            padding-top: 0 !important;
             padding-bottom: 0.75rem !important;
+            margin-top: -3.25rem !important;
         }}
 
 
@@ -112,8 +97,9 @@ st.markdown(
 
         @media (max-width: 640px) {{
             [data-testid="stAppViewContainer"] .main .block-container {{
-                padding-top: 0.5rem !important;
+                padding-top: 0 !important;
                 padding-bottom: 0.5rem !important;
+                margin-top: -3.25rem !important;
             }}
         }}
 
