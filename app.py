@@ -55,6 +55,38 @@ st.markdown(
     <style>
         .stApp {{
             background: #FAFBFA;
+            color: {DARK};
+        }}
+
+        [data-testid="stAppViewContainer"] {{
+            background: #FAFBFA;
+        }}
+
+        [data-testid="stHeader"] {{
+            background: rgba(250, 251, 250, 0.92);
+        }}
+
+        [data-testid="stToolbar"] {{
+            visibility: hidden;
+        }}
+
+        /* Keep Streamlit controls aligned with the MASELCO palette. */
+        [data-baseweb="tag"] {{
+            background: #EAF5EE !important;
+            color: {GREEN} !important;
+            border: 1px solid #CDE2D4 !important;
+        }}
+
+        [data-testid="stAlert"] {{
+            background: #F1F8F3;
+            border: 1px solid #CDE2D4;
+            color: {DARK};
+        }}
+
+        [data-testid="stDataFrame"] {{
+            border: 1px solid #E1E8E3;
+            border-radius: 10px;
+            overflow: hidden;
         }}
 
         [data-testid="stSidebar"] {{
@@ -509,6 +541,25 @@ if not demand.empty:
         )
 else:
     st.warning("No peak-demand records match the selected filters.")
+
+# -----------------------------
+# About the Dashboard
+# -----------------------------
+st.subheader("About This Dashboard")
+st.markdown(
+    f"""
+    <div class="finding-card">
+        <div class="finding-icon">{icon_svg("info", GREEN, 22)}</div>
+        <div>
+            This dashboard analyzes DOE-published MASELCO data to examine
+            <strong>customer distribution, electricity sales, and peak-demand projections</strong>.
+            It combines Electrical Engineering knowledge with Python-based data analysis
+            and interactive visualization.
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # -----------------------------
 # Source Data
