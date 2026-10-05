@@ -62,14 +62,13 @@ st.markdown(
             background: #FAFBFA;
         }}
 
-        /* Remove Streamlit's large header surface while keeping its controls. */
+        /* Keep Streamlit's native control area functional, but remove its visual surface. */
         [data-testid="stHeader"] {{
             background: transparent !important;
             border: 0 !important;
             box-shadow: none !important;
-            height: 0 !important;
-            min-height: 0 !important;
-            overflow: visible !important;
+            height: 2.875rem !important;
+            min-height: 2.875rem !important;
         }}
 
         [data-testid="stDecoration"] {{
