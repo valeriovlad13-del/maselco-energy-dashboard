@@ -449,9 +449,9 @@ for kind, color, finding in findings:
 # -----------------------------
 # Peak Demand
 # -----------------------------
-st.subheader("Peak Demand: 2022 Actual and 2023–2032 Forecast")
+st.subheader("Peak Demand: Actual and Forecast")
 st.markdown(
-    '<div class="section-note">The 2022 value is actual; 2023–2032 values are forecasts.</div>',
+    '<div class="section-note">The chart and summary below respond to the selected year range and data-status filters.</div>',
     unsafe_allow_html=True,
 )
 
@@ -485,14 +485,30 @@ if not demand.empty:
         legend=dict(orientation="h", y=1.08, x=0),
     )
     st.plotly_chart(fig, use_container_width=True)
+
+    # Dynamic summary: always use the first and last visible demand records.
+    first_point = demand.iloc[0]
+    last_point = demand.iloc[-1]
+    first_year = int(first_point["year"])
+    last_year = int(last_point["year"])
+    first_value = float(first_point["value"])
+    last_value = float(last_point["value"])
+
+    if first_year == last_year:
+        st.info(
+            f"Peak demand for {first_year} is {first_value:.1f} MW "
+            f"({first_point['data_status'].lower()})."
+        )
+    else:
+        change_pct = (last_value - first_value) / first_value * 100
+        direction = "increase" if change_pct >= 0 else "decrease"
+        st.info(
+            f"Peak demand changes from {first_value:.1f} MW in {first_year} "
+            f"to {last_value:.1f} MW in {last_year}, a {direction} of "
+            f"approximately {abs(change_pct):.1f}% over the selected period."
+        )
 else:
     st.warning("No peak-demand records match the selected filters.")
-
-if peak_demand is not None and forecast_2032 is not None:
-    st.info(
-        f"Peak demand is projected to increase from {peak_demand:.1f} MW in 2022 "
-        f"to {forecast_2032:.1f} MW in 2032, an increase of approximately {growth_pct:.1f}%."
-    )
 
 # -----------------------------
 # Source Data
